@@ -1,44 +1,89 @@
-#gruvbox vim theme
-#https://github.com/morhetz/gruvbox/wiki/Installation
+#zmodload zsh/zprof
+
+# Requrements:
+# brew install exa
+# Json helper from the appstore
+
+
+# tools:
+# go get -u github.com/fogleman/primitive
+
+# quicklook for .md, .json, better images, colored code, unknown text files
+# from https://github.com/sindresorhus/quick-look-plugins
+# brew cask install qlcommonmark
+# brew cask install quicklook-json
+# brew cask install qlimagesize ?? gone
+# brew cask install qlcolorcode
+# brew cask install qlstephen
+# brew cask install quicklook-csv
+# to remember: stl http://www.elektriktrick.com/sw_quicklook.html, https://www.thingiverse.com/thing:376361
 #
-#export ZSH=$HOME/.oh-my-zsh
-#ZSH_THEME=geometry/geometry
+#
+
+# ZSH Setup
+case `uname` in
+  Darwin)
+    platform='mac'
+  ;;
+  Linux)
+    platform='linux'
+  ;;
+esac
+
 [[ $TERM = xterm* ]] && TERM='xterm-256color'
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
+
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
-# # export MANPATH="/usr/local/man:$MANPATH"
-#
-#source $HOME/antigen.zsh
-source $(brew --prefix)/share/antigen/antigen.zsh
-antigen use oh-my-zsh
-antigen bundle zsh-users/zsh-autosuggestions
-antigen bundle zsh-users/zsh-syntax-highlighting
-antigen bundle zsh-users/zsh-completions
 
-antigen theme geometry-zsh/geometry
-antigen apply
-#source $ZSH/oh-my-zsh.sh
+e_header()  { echo -e "\n\033[1m$@\033[0m"; }
+e_success() { echo -e " \033[1;32m✔\033[0m  $@"; }
+e_error()   { echo -e " \033[1;31m✖\033[0m  $@"; }
 
-#
+# Load zgen only if a user types a zgen command
+zgen () {
+	  if [[ ! -s ${HOME}/.zgen/zgen.zsh ]]; then
+		    git clone --recursive https://github.com/tarjoilija/zgen.git ${ZDOTDIR:-${HOME}}/.zgen
+	  fi
+	  source ${HOME}/.zgen/zgen.zsh
+	  zgen "$@"
+}
+# check if there's no init script
+if [[ ! -s ${HOME}/.zgen/init.zsh ]]; then
+    echo "Creating a zgen save"
+    # specify plugins here
+    zgen prezto
+    #zgen prezto git
+    #zgen prezto command-not-found
+	  zgen prezto tmux
+    zgen prezto syntax-highlighting
 
-# # Example aliases
-alias zshconfig="open ~/.zshrc"
-alias settings="open ~/.bash_profile"
-alias ohmyzsh="open ~/.oh-my-zsh"
+    #zgen load TBSliver/zsh-plugin-colored-man
+    zgen load zdharma/fast-syntax-highlighting
+    #zgen load trapd00r/zsh-syntax-highlighting-filetypes
+    #zgen load zsh-users/zsh-syntax-highlighting
+    zgen load tarruda/zsh-autosuggestions
+    zgen load zsh-users/zsh-completions
 
+    zgen load geometry-zsh/geometry
+    # generate the init script from plugins above
+    zgen save
+    zcompile ${HOME}/.zgen/init.zsh
+else
+    source ${HOME}/.zgen/init.zsh
+fi
+
+# User configs
 alias sshvserver="ssh jan@heaper.de"
-alias wstore="ssh jan@wstore.ddns.net"
-
-alias composer="php /usr/local/bin/composer.phar"
+alias wstore="ssh jan@www.wsto.re"
 
 # Go development
+#TODO: add support for linux with install instructions
 export GOPATH="${HOME}/.go"
-export GOROOT="/usr/local/opt/go/libexec"
+# export GOROOT="/usr/local/Cellar/go/1.11.1/libexec"
+export GOROOT="$(brew --prefix golang)/libexec"
 export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
-
-test -d "${GOPATH}" || mkdir "${GOPATH}"
-test -d "${GOPATH}/src/github.com" || mkdir -p "${GOPATH}/src/github.com"
+#TODO: dont check every time 
+#test -d "${GOPATH}" || mkdir "${GOPATH}"
+#test -d "${GOPATH}/src/github.com" || mkdir -p "${GOPATH}/src/github.com"
 
 #docker
 function undockall {
@@ -46,14 +91,10 @@ function undockall {
 }
 alias updock="docker-compose up -d"
 alias lsdock="docker ps"
-alias swdock="undockall && updock"
 
-#maintainance
-alias chmoddir="find . -type d -name \* -exec chmod 775 {} \;"
+# maintainance
+alias chmoddirs="find . -type d -name \* -exec chmod 775 {} \;"
 alias chmodfiles="find . -type f -exec chmod 644 {} \;"
-
-#new vim
-#alias vim="nvim"
 
 #sudo
 alias fuck='sudo $(fc -ln -1)'
@@ -64,30 +105,10 @@ alias please='sudo'
 function rusto {
     figlet -f rusto $1 | lolcat
 }
-function rustofat {
-    figlet -f rustofat $1 | lolcat
-}
 function slant {
     figlet -f slant $1 | lolcat
 }
-function cyberlg {
-    figlet -f cyberlarge $1 | lolcat
-}
-function cybermd {
-    figlet -f cybermedium $1 | lolcat
-}
-function cybersm {
-    figlet -f cybersmall $1 | lolcat
-}
-function drpepper {
-    figlet -f drpepper $1 | lolcat
-}
-function small {
-    figlet -f small $1 | lolcat
-}
-function lolt {
-    figlet -f $1 $2 | lolcat
-}
+
 #isometric1 -4
 #poison
 #rectangles
@@ -96,6 +117,12 @@ function lolt {
 #stampatello
 #colossal
 #chunky
+#small
+#drpepper
+#cybersmall
+#cybermedium
+#cyberlarge
+#rustofat
 
 #git
 alias ga="git add"
@@ -128,43 +155,24 @@ function mkd() {
 function cdf() { # short for `cdfinder`
 	cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')";
 }
-# `v` with no arguments opens the current directory in Vim, otherwise opens the
-# given location
-function c() {
-	if [ $# -eq 0 ]; then
-		code .;
-	else
-		code "$@";
-	fi;
-}
 
-#bookmarks
-function cdvn() {
-	cd ~/Code/MyVan/;clear;slant 'MyVan'
-}
-function cdac() {
-	cd ~/Code/AlwaysCurious/;clear;slant 'AlwaysCurious'
-}
-function cdlm() {
-	cd ~/Code/lebenMitMS/;clear;slant 'Leben Mit MS'
-}
 alias pcat='pygmentize -f terminal256 -O style=native -g'
-alias rechunk='brew services restart chunkwm'
-alias chrome='open -a "Google Chrome"'
 
-#setup
-function setupconfs(){
-    defaults write com.apple.Dock showhidden -bool true #was YES
+function updateMusic(){
+  cd ~/Music/Youtube/
+  youtube-dl -f bestaudio --extract-audio --audio-format mp3 --audio-quality 0 --no-post-overwrites -ciwx --embed-thumbnail --add-metadata --download-archive downloaded.txt --output '%(playlist)s/%(title)s - %(id)s.%(ext)s' PLdbIj_aeQsBZnF-dX8Pk_BrU-AidCUP_G
 }
 
-slant 'hello Jan'
+#slant 'hello Jan'
 
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
+#[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
+#use pushbullet pls
+#notica() { curl --data "d:$*" https://notica.us/\?sY2iBUv8 ; }
 
-alias craftman="/Users/jan/.craftman/bin/craftman"
-[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
- 
-notica() { curl --data "d:$*" https://notica.us/\?sY2iBUv8 ; }
+#use mpv pls
+#alias vlc='/Applications/VLC.app/Contents/MacOS/VLC'
+#alias cvlc='/Applications/VLC.app/Contents/MacOS/VLC -I rc'
 
-alias sshfork="ssh fork@myvan.fork.de"
+# Sudo
+ZSH_HIGHLIGHT_PATTERNS+=('sudo ' 'fg=white,bold,bg=214')
+#zprof
