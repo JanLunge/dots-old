@@ -20,15 +20,27 @@
 #
 #
 
+# Go development
+#TODO: add install instructions
+export GOPATH="${HOME}/.go"
+#TODO: dont check every time 
+test -d "${GOPATH}" || mkdir "${GOPATH}"
+test -d "${GOPATH}/src/github.com" || mkdir -p "${GOPATH}/src/github.com"
+
+
 # ZSH Setup
 case `uname` in
   Darwin)
     platform='mac'
+    export GOROOT="$(brew --prefix golang)/libexec"
   ;;
   Linux)
     platform='linux'
+    export GOROOT="/usr/local/Cellar/go/1.11.1/libexec"
   ;;
 esac
+
+export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
 
 [[ $TERM = xterm* ]] && TERM='xterm-256color'
 
@@ -74,16 +86,6 @@ fi
 # User configs
 alias sshvserver="ssh jan@heaper.de"
 alias wstore="ssh jan@www.wsto.re"
-
-# Go development
-#TODO: add support for linux with install instructions
-export GOPATH="${HOME}/.go"
-# export GOROOT="/usr/local/Cellar/go/1.11.1/libexec"
-export GOROOT="$(brew --prefix golang)/libexec"
-export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
-#TODO: dont check every time 
-#test -d "${GOPATH}" || mkdir "${GOPATH}"
-#test -d "${GOPATH}/src/github.com" || mkdir -p "${GOPATH}/src/github.com"
 
 #docker
 function undockall {
