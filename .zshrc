@@ -1,5 +1,4 @@
 #zmodload zsh/zprof
-
 # Requrements:
 # brew install exa
 # Json helper from the appstore
@@ -19,11 +18,21 @@
 # to remember: stl http://www.elektriktrick.com/sw_quicklook.html, https://www.thingiverse.com/thing:376361
 #
 #
+# Emacs tramp fix
+if [[ "$TERM" == "dumb" ]]
+then
+  unsetopt zle
+  unsetopt prompt_cr
+  unsetopt prompt_subst
+ # unfunction precmd
+ # unfunction preexec
+  PS1='$ '&& return
+fi
 
 # Go development
 #TODO: add install instructions
 export GOPATH="${HOME}/.go"
-#TODO: dont check every time 
+#TODO: dont check every time
 test -d "${GOPATH}" || mkdir "${GOPATH}"
 test -d "${GOPATH}/src/github.com" || mkdir -p "${GOPATH}/src/github.com"
 
@@ -178,3 +187,4 @@ function updateMusic(){
 # Sudo
 ZSH_HIGHLIGHT_PATTERNS+=('sudo ' 'fg=white,bold,bg=214')
 #zprof
+
