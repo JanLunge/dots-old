@@ -18,16 +18,16 @@
 # to remember: stl http://www.elektriktrick.com/sw_quicklook.html, https://www.thingiverse.com/thing:376361
 #
 #
-# Emacs tramp fix
-if [[ "$TERM" == "dumb" ]]
-then
-  unsetopt zle
-  unsetopt prompt_cr
-  unsetopt prompt_subst
- # unfunction precmd
- # unfunction preexec
-  PS1='$ '#&& return
-fi
+# # Emacs tramp fix
+# if [[ "$TERM" == "dumb" ]]
+# then
+#   unsetopt zle
+#   unsetopt prompt_cr
+#   unsetopt prompt_subst
+#  # unfunction precmd
+#  # unfunction preexec
+#   PS1='$ '
+# fi
 
 # Go development
 #TODO: add install instructions
@@ -51,7 +51,7 @@ esac
 
 export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
 
-[[ $TERM = xterm* ]] && TERM='xterm-256color'
+#[[ $TERM = xterm* ]] && TERM='xterm-256color'
 
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 
@@ -84,8 +84,8 @@ if [[ ! -s ${HOME}/.zgen/init.zsh ]]; then
 
     if [ $(uname -a | grep -ci Darwin) = 1 ]; then
         # Load macOS-specific plugins
-        zgen oh-my-zsh plugins/brew
-        zgen oh-my-zsh plugins/osx
+        #zgen oh-my-zsh plugins/brew
+        #zgen oh-my-zsh plugins/osx
     fi
     zgen load chrissicool/zsh-256color
 
@@ -97,7 +97,7 @@ if [[ ! -s ${HOME}/.zgen/init.zsh ]]; then
     zgen load zsh-users/zsh-completions
 
     #zgen load geometry-zsh/geometry
-    zgen load denysdovhan/spaceship-prompt spaceship
+    # zgen load denysdovhan/spaceship-prompt spaceship
     # generate the init script from plugins above
     zgen save
     zcompile ${HOME}/.zgen/init.zsh
@@ -200,4 +200,12 @@ function updateMusic(){
 # Sudo
 ZSH_HIGHLIGHT_PATTERNS+=('sudo ' 'fg=white,bold,bg=214')
 #zprof
+
+export PROMPT='> '
+
+export PROMPT='[${ret_status}%{$fg[magenta]%}%n@%{$fg[red]%}%m]-[%{$fg[cyan]%}%c%{$reset_color%}]%{$fg_bold[blue]%}-[%T]%{$reset_color%}$ '
+# %m is hostname
+# %n is username
+# ▲◆◇◻■●○・△ per device
+PROMPT=$'\n▲ %~ \n> '
 
