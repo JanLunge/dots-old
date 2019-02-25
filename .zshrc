@@ -26,7 +26,7 @@ then
   unsetopt prompt_subst
  # unfunction precmd
  # unfunction preexec
-  PS1='$ '&& return
+  PS1='$ '#&& return
 fi
 
 # Go development
@@ -76,6 +76,18 @@ if [[ ! -s ${HOME}/.zgen/init.zsh ]]; then
     #zgen prezto command-not-found
 	  zgen prezto tmux
     zgen prezto syntax-highlighting
+    zgen load zsh-users/zsh-history-substring-search
+    # Set keystrokes for substring searching
+    zmodload zsh/terminfo
+    bindkey "$terminfo[kcuu1]" history-substring-search-up
+    bindkey "$terminfo[kcud1]" history-substring-search-down
+
+    if [ $(uname -a | grep -ci Darwin) = 1 ]; then
+        # Load macOS-specific plugins
+        zgen oh-my-zsh plugins/brew
+        zgen oh-my-zsh plugins/osx
+    fi
+    zgen load chrissicool/zsh-256color
 
     #zgen load TBSliver/zsh-plugin-colored-man
     zgen load zdharma/fast-syntax-highlighting
@@ -84,7 +96,8 @@ if [[ ! -s ${HOME}/.zgen/init.zsh ]]; then
     zgen load tarruda/zsh-autosuggestions
     zgen load zsh-users/zsh-completions
 
-    zgen load geometry-zsh/geometry
+    #zgen load geometry-zsh/geometry
+    zgen load denysdovhan/spaceship-prompt spaceship
     # generate the init script from plugins above
     zgen save
     zcompile ${HOME}/.zgen/init.zsh
