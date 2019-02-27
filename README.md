@@ -13,8 +13,11 @@ logfiles for terminal usage `sudo rm -rf /private/var/log/asl/*.asl`
 zsh history `mv ~/.zsh_history ~/zsh_history_backup`
 
 ## Snippets
-`ln -s ~/.dotfiles/vim/.vimrc ~/.vimrc` for linking dotfiles to the right place
+  `ln -s ~/.dotfiles/vim/.vimrc ~/.vimrc` for linking dotfiles to the right place
 
+# Apps
+* `brew cask install hamerspoon`
+* `brew cask install karabiner-elements`
 
 ## Arduino and Nodemcu (esp8266)
 - driver https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers
@@ -29,3 +32,8 @@ to get polybar https://github.com/adi1090x/polybar-themes
 `yay -S ttf-fantasque-sans-git ttf-material-icons`
 sudo pacman -S emacs adobe-source-code-pro-fonts
 git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
+
+
+
+# Other
+selfhosting (owncloud, nextcloud, custom share with unraid and vpn)
