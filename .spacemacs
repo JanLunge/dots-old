@@ -332,10 +332,10 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  (define-key evil-normal-state-map (kbd "t") 'evil-forward-char)
-  (define-key evil-normal-state-map (kbd "s") 'evil-backward-char)
-  (define-key evil-normal-state-map (kbd "r") 'evil-previous-line)
-  (define-key evil-normal-state-map (kbd "n") 'evil-next-line)
+  ;; (define-key evil-normal-state-map (kbd "t") 'evil-forward-char)
+  ;; (define-key evil-normal-state-map (kbd "s") 'evil-backward-char)
+  ;; (define-key evil-normal-state-map (kbd "r") 'evil-previous-line)
+  ;; (define-key evil-normal-state-map (kbd "n") 'evil-next-line)
   (global-display-line-numbers-mode 1)
   (setq mac-option-key-is-meta nil
         mac-command-key-is-meta t
@@ -347,7 +347,10 @@ you should place your code here."
   (setq mac-pass-command-to-system nil)
   (setq neo-theme 'icons)
   (setq neo-vc-integration '(char))
-  
+  ;; (define-key evil-motion-state-map "n" 'evil-backward-char)
+  ;; (define-key evil-motion-state-map "r" 'evil-forward-char)
+  ;; (define-key evil-motion-state-map "t" 'evil-next-line)
+  ;; (define-key evil-motion-state-map "d" 'evil-previous-line) 
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
