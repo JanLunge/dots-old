@@ -132,14 +132,14 @@ setHandler ( 'f7', NOMOD, () => {
 setHandler ( 'f8', NOMOD, () => {
   halves(Window.focused(), 'right');
 });
-//right half
-setHandler ( 'right', ['ctrl', 'cmd'], () => {
-    halves(Window.focused(), 'right');
-});
-//right half
-setHandler ( 'left', ['ctrl', 'cmd'], () => {
-    halves(Window.focused(), 'left');
-});
+// //right half
+// setHandler ( 'right', ['ctrl', 'cmd'], () => {
+//     halves(Window.focused(), 'right');
+// });
+// //right half
+// setHandler ( 'left', ['ctrl', 'cmd'], () => {
+//     halves(Window.focused(), 'left');
+// });
 //right half
 setHandler ( 'up', ['ctrl', 'cmd'], () => {
     switchScreen();
@@ -195,16 +195,16 @@ setHandler ( 'f1', NOMOD, () => {
   }
 });
 
-// Chrome
-setHandler ( 'a', HYPER, () => {
-  App.launch ( "Google Chrome", { focus: true } );
-});
-// pause app
-setHandler ( 's', HYPER, () => {
-  osascript ( 'tell application "System Events" to return name of first process whose frontmost is true', ({ output }) => {
-    const app = _.trim ( output ),
-          isStopped = !Window.focused (); // If the app is stopped this will return undefined
-    shell ( `killall -${isStopped ? 'CONT' : 'STOP'} -c '${app}'` );
-  });
+// // Chrome
+// setHandler ( 'a', HYPER, () => {
+//   App.launch ( "Google Chrome", { focus: true } );
+// });
+// // pause app
+// setHandler ( 's', HYPER, () => {
+//   osascript ( 'tell application "System Events" to return name of first process whose frontmost is true', ({ output }) => {
+//     const app = _.trim ( output ),
+//           isStopped = !Window.focused (); // If the app is stopped this will return undefined
+//     shell ( `killall -${isStopped ? 'CONT' : 'STOP'} -c '${app}'` );
+//   });
 
-});
+// });

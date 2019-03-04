@@ -1,15 +1,6 @@
 ;; -*- mode: emacs-lisp -*-
 ;; this file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
-(global-display-line-numbers-mode 1)
-(setq mac-option-key-is-meta nil
-      mac-command-key-is-meta t
-      mac-command-modifier 'meta
-      mac-option-modifier 'none)
-(setq ns-command-modifier 'meta)
-(setq ns-option-modifier 'none)
-(setq ns-function-modifier 'none)
-(setq mac-pass-command-to-system nil)
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration.
 You should not put any user code in this function besides modifying the variable
@@ -82,7 +73,8 @@ values."
     dotspacemacs-additional-packages '(
                                         darktooth-theme
                                         gruvbox-theme
-                                        monokai-theme)
+                                        monokai-theme
+                                        all-the-icons)
     ;; A list of packages that cannot be updated.
     dotspacemacs-frozen-packages '()
     ;; A list of packages that will not be installed and loaded.
@@ -340,6 +332,22 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  (define-key evil-normal-state-map (kbd "t") 'evil-forward-char)
+  (define-key evil-normal-state-map (kbd "s") 'evil-backward-char)
+  (define-key evil-normal-state-map (kbd "r") 'evil-previous-line)
+  (define-key evil-normal-state-map (kbd "n") 'evil-next-line)
+  (global-display-line-numbers-mode 1)
+  (setq mac-option-key-is-meta nil
+        mac-command-key-is-meta t
+        mac-command-modifier 'meta
+        mac-option-modifier 'none)
+  (setq ns-command-modifier 'meta)
+  (setq ns-option-modifier 'none)
+  (setq ns-function-modifier 'none)
+  (setq mac-pass-command-to-system nil)
+  (setq neo-theme 'icons)
+  (setq neo-vc-integration '(char))
+  
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
