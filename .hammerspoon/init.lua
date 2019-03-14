@@ -258,13 +258,14 @@ hs.hotkey.bind({"cmd", "alt", "ctrl"}, "W", function()
 end)
 -- write out the clipboard
 hs.hotkey.bind({"cmd", "alt"}, "V", function() hs.eventtap.keyStrokes(hs.pasteboard.getContents()) end)
+
 -- hs.hints.style = 'vimperator'
 --hs.hints.showTitleThresh = 10
 -- hs.hotkey.bind({'cmd', 'alt'}, 'p', hs.hints.windowHints)
-hyper:bind({}, 'u', function()
-    hs.hints.windowHints()
-    hyper.triggered = true
-end)
+-- hyper:bind({}, 'u', function()
+--     hs.hints.windowHints()
+--     hyper.triggered = true
+-- end)
 hyper:bind({}, 't', function()
     hs.eventtap.keyStroke({'alt'}, 'space')
     hyper.triggered = true
@@ -288,6 +289,15 @@ hyper:bind({}, 'e', function()
 end)
 
 ------------------------------------------------
+-- GRID
+------------------------------------------------
+hs.grid.setGrid('4x4')
+hs.grid.setMargins('10x10')
+hs.hotkey.bind({'cmd'}, 'g', hs.grid.show)
+--hs.hotkey.bind({'cmd'}, 'h', hs.grid.show)
+
+
+------------------------------------------------
 -- Expose
 ------------------------------------------------
 -- set up your instance(s)
@@ -304,13 +314,6 @@ hs.expose.ui.maxHintLetters = 1
 --hs.hotkey.bind('cmd','e','Expose',function()expose:toggleShow()end)
 
 
-------------------------------------------------
--- GRID
-------------------------------------------------
-hs.grid.setGrid('4x4')
-hs.grid.setMargins('10x10')
---hs.hotkey.bind({'cmd'}, 'g', hs.grid.show)
---hs.hotkey.bind({'cmd'}, 'h', hs.grid.show)
 
 
 hs.window.animationDuration = 0.1
