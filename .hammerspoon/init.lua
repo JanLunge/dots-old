@@ -118,6 +118,23 @@ function move_botright()
     redrawBorder()
 end
 
+function move_vthird(index)
+  local win = hs.window.focusedWindow()
+  if win == nil then
+    return
+  end
+  local f = win:frame()
+  local screen = win:screen()
+  local max = screen:frame()
+
+  f.x = max.x
+  f.y = max.y + ((max.h / 3) * index)
+  f.w = max.w
+  f.h = max.h / 3
+  win:setFrame(f)
+  redrawBorder()
+end
+
 function maximize_window()
     local win = hs.window.focusedWindow()
     if win == nil then
@@ -278,8 +295,16 @@ hyper:bind({}, 'a', function()
     hs.application.launchOrFocus("Google Chrome")
     hyper.triggered = true
 end)
+hyper:bind({}, 'n', function()
+    hs.application.launchOrFocus("Google Chrome")
+    hyper.triggered = true
+end)
 hyper:bind({}, 'o', function()
     hs.application.launchOrFocus("Telegram")
+    hyper.triggered = true
+end)
+hyper:bind({}, 'r', function()
+    hs.application.launchOrFocus("PhpStorm")
     hyper.triggered = true
 end)
 
@@ -287,7 +312,18 @@ hyper:bind({}, 'e', function()
     hs.application.launchOrFocus("Emacs")
     hyper.triggered = true
 end)
-
+hyper:bind({}, 'l', function()
+    move_vthird(0)
+    hyper.triggered = true
+end)
+hyper:bind({}, 'c', function()
+    move_vthird(1)
+    hyper.triggered = true
+end)
+hyper:bind({}, 'w', function()
+    move_vthird(2)
+    hyper.triggered = true
+end)
 ------------------------------------------------
 -- GRID
 ------------------------------------------------
