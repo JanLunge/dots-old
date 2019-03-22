@@ -1,6 +1,6 @@
 -- A global variable for the Hyper Mode
 hyper = hs.hotkey.modal.new({}, 'F15')
-
+hyperMod = {"ctrl", "alt", "cmd", "shift"}
 -- Enter Hyper Mode when F18 (Hyper/Capslock) is pressed
 function enterHyperMode()
   hyper.triggered = false
@@ -323,6 +323,17 @@ end)
 hyper:bind({}, 'w', function()
     move_vthird(2)
     hyper.triggered = true
+end)
+
+---- hypermod
+hs.hotkey.bind(hyperMod, 'n', function()
+    hs.application.launchOrFocus("Google Chrome")
+end)
+hs.hotkey.bind(hyperMod, 'r', function()
+    hs.application.launchOrFocus("PhpStorm")
+end)
+hs.hotkey.bind(hyperMod, 'g', function()
+    hs.osascript.applescriptFromFile("/Users/jan/playground/automate/youtube-music-play.applescript")
 end)
 ------------------------------------------------
 -- GRID
