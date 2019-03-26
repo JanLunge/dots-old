@@ -118,7 +118,7 @@ function move_botright()
     redrawBorder()
 end
 
-function move_vthird(index)
+function move_vthird(height, divisions, index)
   local win = hs.window.focusedWindow()
   if win == nil then
     return
@@ -128,9 +128,9 @@ function move_vthird(index)
   local max = screen:frame()
 
   f.x = max.x
-  f.y = max.y + ((max.h / 3) * index)
+  f.y = max.y + (max.h / divisions * index)
   f.w = max.w
-  f.h = max.h / 3
+  f.h = (max.h / divisions)*height
   win:setFrame(f)
   redrawBorder()
 end
@@ -326,15 +326,67 @@ hyper:bind({}, 'w', function()
 end)
 
 ---- hypermod
+-- app switcher
 hs.hotkey.bind(hyperMod, 'n', function()
     hs.application.launchOrFocus("Google Chrome")
+end)
+hs.hotkey.bind(hyperMod, 'h', function()
+    hs.application.launchOrFocus("Vivaldi")
 end)
 hs.hotkey.bind(hyperMod, 'r', function()
     hs.application.launchOrFocus("PhpStorm")
 end)
+
 hs.hotkey.bind(hyperMod, 'g', function()
+    hs.application.launchOrFocus("Emacs")
+end)
+hs.hotkey.bind(hyperMod, 't', function()
+                 hs.application.launchOrFocus("iTerm")
+end)
+--media
+hs.hotkey.bind(hyperMod, 'm', function()
     hs.osascript.applescriptFromFile("/Users/jan/playground/automate/youtube-music-play.applescript")
 end)
+-- test for moving mouse to window
+hs.hotkey.bind(hyperMod, "o", function()
+  local win = hs.window.focusedWindow()
+  if win == nil then
+    return
+  end
+  point = win:topLeft()
+  middle = hs.geometry(point.x + (win:size().w / 2), point.y + (win:size().h / 2))
+  hs.mouse.setAbsolutePosition(middle)
+end)
+
+-- window movement
+hs.hotkey.bind(hyperMod, 'i', function()
+  move_left()
+end)
+hs.hotkey.bind(hyperMod, 'a', function()
+  maximize_window()
+end)
+hs.hotkey.bind(hyperMod, 'e', function()
+  move_right()
+end)
+hs.hotkey.bind(hyperMod, 'v', function()
+  move_vthird(1, 3, 0)
+end)
+hs.hotkey.bind(hyperMod, 'l', function()
+  move_vthird(1, 3, 1)
+end)
+hs.hotkey.bind(hyperMod, 'c', function()
+  move_vthird(1, 3, 2)
+end)
+hs.hotkey.bind(hyperMod, 'c', function()
+  move_vthird(1, 3, 2)
+end)
+hs.hotkey.bind(hyperMod, 'x', function()
+  move_vthird(2, 3, 0)
+end)
+hs.hotkey.bind(hyperMod, 'w', function()
+  move_vthird(2, 3, 1)
+end)
+
 ------------------------------------------------
 -- GRID
 ------------------------------------------------
@@ -381,5 +433,5 @@ configFileWatcher = hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/init.
 configFileWatcher:start()
 
 --[ hourly alarm ]----------------------------------------------------------
-hs.timer.doAt("0:00","1h", function() hs.alert("Ding Dong") end)
+-- hs.timer.doAt("0:00","1h", function() hs.alert("Ding Dong") end)
 

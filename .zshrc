@@ -60,6 +60,7 @@ e_success() { echo -e " \033[1;32m✔\033[0m  $@"; }
 e_error()   { echo -e " \033[1;31m✖\033[0m  $@"; }
 
 # Load zgen only if a user types a zgen command
+
 zgen () {
 	  if [[ ! -s ${HOME}/.zgen/zgen.zsh ]]; then
 		    git clone --recursive https://github.com/tarjoilija/zgen.git ${ZDOTDIR:-${HOME}}/.zgen
@@ -75,13 +76,15 @@ if [[ ! -s ${HOME}/.zgen/init.zsh ]]; then
     #zgen prezto git
     #zgen prezto command-not-found
 	  zgen prezto tmux
-    zgen prezto syntax-highlighting
+    #zgen prezto syntax-highlighting
+    zgen load zdharma/fast-syntax-highlighting
     zgen load zsh-users/zsh-history-substring-search
     # Set keystrokes for substring searching
     zmodload zsh/terminfo
     bindkey "$terminfo[kcuu1]" history-substring-search-up
     bindkey "$terminfo[kcud1]" history-substring-search-down
-
+    bindkey '^[[A' history-substring-search-up
+    bindkey '^[[B' history-substring-search-down
     if [ $(uname -a | grep -ci Darwin) = 1 ]; then
         # Load macOS-specific plugins
         #zgen oh-my-zsh plugins/brew
@@ -90,11 +93,10 @@ if [[ ! -s ${HOME}/.zgen/init.zsh ]]; then
     zgen load chrissicool/zsh-256color
 
     #zgen load TBSliver/zsh-plugin-colored-man
-    zgen load zdharma/fast-syntax-highlighting
     #zgen load trapd00r/zsh-syntax-highlighting-filetypes
     #zgen load zsh-users/zsh-syntax-highlighting
-    zgen load tarruda/zsh-autosuggestions
-    zgen load zsh-users/zsh-completions
+    #zgen load tarruda/zsh-autosuggestions
+    #zgen load zsh-users/zsh-completions
 
     #zgen load geometry-zsh/geometry
     # zgen load denysdovhan/spaceship-prompt spaceship
