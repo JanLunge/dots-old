@@ -30,7 +30,7 @@ function move_left()
     f.w = max.w / 2
     f.h = max.h
     win:setFrame(f)
-    redrawBorder()
+    --redrawBorder()
 end
 
 function move_right()
@@ -47,7 +47,7 @@ function move_right()
     f.w = max.w / 2
     f.h = max.h
     win:setFrame(f)
-    redrawBorder()
+    --redrawBorder()
 end
 
 function move_topleft()
@@ -64,7 +64,7 @@ function move_topleft()
     f.w = max.w / 2
     f.h = max.h / 2
     win:setFrame(f)
-    redrawBorder()
+    --redrawBorder()
 end
 
 function move_topright()
@@ -81,7 +81,7 @@ function move_topright()
     f.w = max.w / 2
     f.h = max.h / 2
     win:setFrame(f)
-    redrawBorder()
+    --redrawBorder()
 end
 
 function move_botleft()
@@ -98,7 +98,7 @@ function move_botleft()
     f.w = max.w / 2
     f.h = max.h / 2
     win:setFrame(f)
-    redrawBorder()
+    --redrawBorder()
 end
 
 function move_botright()
@@ -115,7 +115,7 @@ function move_botright()
     f.w = max.w / 2
     f.h = max.h / 2
     win:setFrame(f)
-    redrawBorder()
+    --redrawBorder()
 end
 
 function move_vthird(height, divisions, index)
@@ -132,7 +132,7 @@ function move_vthird(height, divisions, index)
   f.w = max.w
   f.h = (max.h / divisions)*height
   win:setFrame(f)
-  redrawBorder()
+  --redrawBorder()
 end
 
 function maximize_window()
@@ -149,7 +149,7 @@ function maximize_window()
     f.w = max.w
     f.h = max.h
     win:setFrame(f)
-    redrawBorder()
+    --redrawBorder()
 end
 
 function focus_left()
@@ -235,13 +235,13 @@ function redrawBorder()
   end
 end
 
-redrawBorder()
+-- redrawBorder()
 
-allwindows = hs.window.filter.new(nil)
-allwindows:subscribe(hs.window.filter.windowCreated, function () redrawBorder() end)
-allwindows:subscribe(hs.window.filter.windowFocused, function () redrawBorder() end)
-allwindows:subscribe(hs.window.filter.windowMoved, function () redrawBorder() end)
-allwindows:subscribe(hs.window.filter.windowUnfocused, function () redrawBorder() end)
+-- allwindows = hs.window.filter.new(nil)
+-- allwindows:subscribe(hs.window.filter.windowCreated, function () redrawBorder() end)
+-- allwindows:subscribe(hs.window.filter.windowFocused, function () redrawBorder() end)
+-- allwindows:subscribe(hs.window.filter.windowMoved, function () redrawBorder() end)
+-- allwindows:subscribe(hs.window.filter.windowUnfocused, function () redrawBorder() end)
 
 
 hyper:bind({}, 'Left', function()
@@ -274,7 +274,7 @@ hs.hotkey.bind({"cmd", "alt", "ctrl"}, "W", function()
     hs.notify.new({title="Hammerspoon", informativeText="Hello World"}):send()
 end)
 -- write out the clipboard
-hs.hotkey.bind({"cmd", "alt"}, "V", function() hs.eventtap.keyStrokes(hs.pasteboard.getContents()) end)
+-- hs.hotkey.bind({"cmd", "alt"}, "V", function() hs.eventtap.keyStrokes(hs.pasteboard.getContents()) end)
 
 -- hs.hints.style = 'vimperator'
 --hs.hints.showTitleThresh = 10
@@ -305,6 +305,12 @@ hyper:bind({}, 'o', function()
 end)
 hyper:bind({}, 'r', function()
     hs.application.launchOrFocus("PhpStorm")
+    hyper.triggered = true
+end)
+hyper:bind({}, 'q', function()
+    hs.appfinder.appFromName("Telegram"):hide()
+    hs.appfinder.appFromName("Vivaldi"):hide()
+    hs.appfinder.appFromName("Vysor"):hide()
     hyper.triggered = true
 end)
 
@@ -341,11 +347,20 @@ hs.hotkey.bind(hyperMod, 'g', function()
     hs.application.launchOrFocus("Emacs")
 end)
 hs.hotkey.bind(hyperMod, 't', function()
-                 hs.application.launchOrFocus("iTerm")
+    hs.application.launchOrFocus("iTerm")
+end)
+hs.hotkey.bind(hyperMod, '8', function()
+    hs.application.launchOrFocus("Visual Studio Code")
+end)
+hs.hotkey.bind(hyperMod, 's', function()
+    hs.application.launchOrFocus("Telegram")
 end)
 --media
 hs.hotkey.bind(hyperMod, 'm', function()
     hs.osascript.applescriptFromFile("/Users/jan/playground/automate/youtube-music-play.applescript")
+end)
+hs.hotkey.bind(hyperMod, 'b', function()
+    hs.osascript.applescriptFromFile("/Users/jan/playground/automate/youtube-play.applescript")
 end)
 -- test for moving mouse to window
 hs.hotkey.bind(hyperMod, "o", function()
