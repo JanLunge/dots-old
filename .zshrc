@@ -1,11 +1,9 @@
-#zmodload zsh/zprof
-# Requrements:
-# brew install exa
-# Json helper from the appstore
+# ZSHRC - fast
+# inspired by lukes zoomer shell
 
-
-# tools:
-# go get -u github.com/fogleman/primitive
+# Requirements:
+## Brew:
+# lf, zsh-syntax-higlighting, zsh-autosuggestions, zsh-history-substring-search
 
 # quicklook for .md, .json, better images, colored code, unknown text files
 # from https://github.com/sindresorhus/quick-look-plugins
@@ -15,199 +13,97 @@
 # brew cask install qlcolorcode
 # brew cask install qlstephen
 # brew cask install quicklook-csv
-# to remember: stl http://www.elektriktrick.com/sw_quicklook.html, https://www.thingiverse.com/thing:376361
-#
-#
-# # Emacs tramp fix
-# if [[ "$TERM" == "dumb" ]]
-# then
-#   unsetopt zle
-#   unsetopt prompt_cr
-#   unsetopt prompt_subst
-#  # unfunction precmd
-#  # unfunction preexec
-#   PS1='$ '
-# fi
-
-# Go development
-#TODO: add install instructions
-export GOPATH="${HOME}/.go"
-#TODO: dont check every time
-test -d "${GOPATH}" || mkdir "${GOPATH}"
-test -d "${GOPATH}/src/github.com" || mkdir -p "${GOPATH}/src/github.com"
 
 
-# ZSH Setup
-case `uname` in
-  Darwin)
-    platform='mac'
-    export GOROOT="$(brew --prefix golang)/libexec"
-  ;;
-  Linux)
-    platform='linux'
-    export GOROOT="/usr/local/Cellar/go/1.11.1/libexec"
-  ;;
-esac
+# Enable colors and change prompt:
+autoload -U colors && colors
+PS1="%B%{$fg[red]%}[%{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%} $%b "$'\n'"%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M%{$fg[red]%}]%{$reset_color%} > %b"
 
-export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
+# History in cache directory:
+HISTSIZE=10000
+SAVEHIST=10000
+HISTFILE=~/.cache/zsh/history
 
-#[[ $TERM = xterm* ]] && TERM='xterm-256color'
+# Basic auto/tab complete:
+autoload -U compinit
+zstyle ':completion:*' menu select
+zmodload zsh/complist
+compinit
+_comp_options+=(globdots)		# Include hidden files.
 
-export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+# vi mode
+bindkey -v
+export KEYTIMEOUT=1
 
-e_header()  { echo -e "\n\033[1m$@\033[0m"; }
-e_success() { echo -e " \033[1;32m✔\033[0m  $@"; }
-e_error()   { echo -e " \033[1;31m✖\033[0m  $@"; }
+# Use vim keys in tab complete menu:
+bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'k' vi-up-line-or-history
+bindkey -M menuselect 'l' vi-forward-char
+bindkey -M menuselect 'j' vi-down-line-or-history
+bindkey -v '^?' backward-delete-char
 
-# Load zgen only if a user types a zgen command
-
-zgen () {
-	  if [[ ! -s ${HOME}/.zgen/zgen.zsh ]]; then
-		    git clone --recursive https://github.com/tarjoilija/zgen.git ${ZDOTDIR:-${HOME}}/.zgen
-	  fi
-	  source ${HOME}/.zgen/zgen.zsh
-	  zgen "$@"
+# Change cursor shape for different vi modes.
+function zle-keymap-select {
+  if [[ ${KEYMAP} == vicmd ]] ||
+     [[ $1 = 'block' ]]; then
+    echo -ne '\e[1 q'
+  elif [[ ${KEYMAP} == main ]] ||
+       [[ ${KEYMAP} == viins ]] ||
+       [[ ${KEYMAP} = '' ]] ||
+       [[ $1 = 'beam' ]]; then
+    echo -ne '\e[5 q'
+  fi
 }
-# check if there's no init script
-if [[ ! -s ${HOME}/.zgen/init.zsh ]]; then
-    echo "Creating a zgen save"
-    # specify plugins here
-    zgen prezto
-    #zgen prezto git
-    #zgen prezto command-not-found
-	  zgen prezto tmux
-    #zgen prezto syntax-highlighting
-    zgen load zdharma/fast-syntax-highlighting
-    zgen load zsh-users/zsh-history-substring-search
-    # Set keystrokes for substring searching
-    zmodload zsh/terminfo
-    bindkey "$terminfo[kcuu1]" history-substring-search-up
-    bindkey "$terminfo[kcud1]" history-substring-search-down
-    bindkey '^[[A' history-substring-search-up
-    bindkey '^[[B' history-substring-search-down
-    if [ $(uname -a | grep -ci Darwin) = 1 ]; then
-        # Load macOS-specific plugins
-        #zgen oh-my-zsh plugins/brew
-        #zgen oh-my-zsh plugins/osx
+zle -N zle-keymap-select
+zle-line-init() {
+    zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
+    echo -ne "\e[5 q"
+}
+zle -N zle-line-init
+echo -ne '\e[5 q' # Use beam shape cursor on startup.
+preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
+
+# Use lf to switch directories and bind it to ctrl-o
+lfcd () {
+    tmp="$(mktemp)"
+    lf -last-dir-path="$tmp" "$@"
+    if [ -f "$tmp" ]; then
+        dir="$(cat "$tmp")"
+        rm -f "$tmp"
+        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
     fi
-    zgen load chrissicool/zsh-256color
-
-    #zgen load TBSliver/zsh-plugin-colored-man
-    #zgen load trapd00r/zsh-syntax-highlighting-filetypes
-    #zgen load zsh-users/zsh-syntax-highlighting
-    #zgen load tarruda/zsh-autosuggestions
-    #zgen load zsh-users/zsh-completions
-
-    #zgen load geometry-zsh/geometry
-    # zgen load denysdovhan/spaceship-prompt spaceship
-    # generate the init script from plugins above
-    zgen save
-    zcompile ${HOME}/.zgen/init.zsh
-else
-    source ${HOME}/.zgen/init.zsh
-fi
-
-# User configs
-alias sshvserver="ssh jan@heaper.de"
-alias wstore="ssh jan@www.wsto.re"
-
-#docker
-function undockall {
-    docker stop $(docker ps -a -q)
 }
-alias updock="docker-compose up -d"
-alias lsdock="docker ps"
+bindkey -s '^o' 'lfcd\n'
 
-# maintainance
-alias chmoddirs="find . -type d -name \* -exec chmod 775 {} \;"
-alias chmodfiles="find . -type f -exec chmod 644 {} \;"
+# ci"
+autoload -U select-quoted
+zle -N select-quoted
+for m in visual viopp; do
+  for c in {a,i}{\',\",\`}; do
+    bindkey -M $m $c select-quoted
+  done
+done
 
-#sudo
-alias fuck='sudo $(fc -ln -1)'
-alias _='sudo'
-alias please='sudo'
+# ci{, ci(, di{ etc..
+autoload -U select-bracketed
+zle -N select-bracketed
+for m in visual viopp; do
+  for c in {a,i}${(s..)^:-'()[]{}<>bB'}; do
+    bindkey -M $m $c select-bracketed
+  done
+done
+# Edit line in vim with ctrl-e:
+autoload edit-command-line; zle -N edit-command-line
+bindkey '^e' edit-command-line
 
-#art
-function rusto {
-    figlet -f rusto $1 | lolcat
-}
-function slant {
-    figlet -f slant $1 | lolcat
-}
+# Load aliases and shortcuts if existent.
+[ -f "$HOME/.config/shortcutrc" ] && source "$HOME/.config/shortcutrc"
+[ -f "$HOME/.dotfiles/aliasrc" ] && source "$HOME/.dotfiles/aliasrc"
 
-#isometric1 -4
-#poison
-#rectangles
-#rozzo
-#smisome1
-#stampatello
-#colossal
-#chunky
-#small
-#drpepper
-#cybersmall
-#cybermedium
-#cyberlarge
-#rustofat
+source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /usr/local/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
 
-#git
-alias ga="git add"
-alias gam="git ls-files --modified | xargs git add"
-alias gc="git commit -m"
-alias gs="git status"
-alias gd="git diff"
-alias gf="git fetch"
-alias gm="git merge"
-alias gr="git rebase"
-alias gp="git push"
-alias gpl="git pull"
-alias gu="git unstage"
-alias gg="git graph"
-alias gco="git checkout"
-alias glog="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all"
-
-
-#finder
-alias hide='chflags hidden'
-alias unhide='chflags nohidden'
-alias showfinderhidden="defaults write com.apple.Finder AppleShowAllFiles true && killall Finder"
-alias hidefinderhidden="defaults write com.apple.Finder AppleShowAllFiles false && killall Finder"
-
-#create dir and enter it
-function mkd() {
-	mkdir -p "$@" && cd "$_";
-}
-# Change working directory to the top-most Finder window location
-function cdf() { # short for `cdfinder`
-	cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')";
-}
-
-alias pcat='pygmentize -f terminal256 -O style=native -g'
-
-function updateMusic(){
-  cd ~/Music/Youtube/
-  youtube-dl -f bestaudio --extract-audio --audio-format mp3 --audio-quality 0 --no-post-overwrites -ciwx --embed-thumbnail --add-metadata --download-archive downloaded.txt --output '%(playlist)s/%(title)s - %(id)s.%(ext)s' PLdbIj_aeQsBZnF-dX8Pk_BrU-AidCUP_G
-}
-
-#slant 'hello Jan'
-
-#[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
-#use pushbullet pls
-#notica() { curl --data "d:$*" https://notica.us/\?sY2iBUv8 ; }
-
-#use mpv pls
-#alias vlc='/Applications/VLC.app/Contents/MacOS/VLC'
-#alias cvlc='/Applications/VLC.app/Contents/MacOS/VLC -I rc'
-
-# Sudo
-ZSH_HIGHLIGHT_PATTERNS+=('sudo ' 'fg=white,bold,bg=214')
-#zprof
-
-export PROMPT='> '
-
-export PROMPT='[${ret_status}%{$fg[magenta]%}%n@%{$fg[red]%}%m]-[%{$fg[cyan]%}%c%{$reset_color%}]%{$fg_bold[blue]%}-[%T]%{$reset_color%}$ '
-# %m is hostname
-# %n is username
-# ▲◆◇◻■●○・△ per device
-PROMPT=$'\n▲ %~ \n> '
-
+# Load zsh-syntax-highlighting; should be last.
+source /usr/local/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null

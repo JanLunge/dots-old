@@ -83,11 +83,16 @@ values."
                                         gruvbox-theme
                                         monokai-theme
                                         all-the-icons
+                                        lsp-mode
+                                        lsp-vue
+                                        company-lsp
                                         twig-mode
                                         yaml-mode
                                         sass-mode
                                         css-mode
                                         rainbow-mode
+                                        vue-mode
+                                        prettier-js
                                         emmet-mode)
     ;; A list of packages that cannot be updated.
     dotspacemacs-frozen-packages '()
@@ -163,7 +168,8 @@ values."
     ;; List of themes, the first of the list is loaded when spacemacs starts.
     ;; Press <SPC> T n to cycle to the next theme in the list (works great
     ;; with 2 themes variants, one dark and one light)
-    dotspacemacs-themes '(gruvbox-dark-hard
+    dotspacemacs-themes '(monokai
+                          gruvbox-dark-hard
                           spacemacs-dark
                           spacemacs-light)
     ;; If non nil the cursor color matches the state color in GUI Emacs.
@@ -351,6 +357,11 @@ you should place your code here."
   ;; (define-key evil-normal-state-map (kbd "s") 'evil-backward-char)
   ;; (define-key evil-normal-state-map (kbd "r") 'evil-previous-line)
   ;; (define-key evil-normal-state-map (kbd "n") 'evil-next-line)
+  ;;(add-to-list 'tramp-default-user-alist
+  ;;             '("ssh" ".fork.*'" "fork"))
+  (customize-set-variable 'tramp-default-user "fork")
+  (require 'prettier-js)
+  (add-hook 'vue-mode-hook #'prettier-js-mode)
   (define-key global-map (kbd "<tab>") 'hippie-expand)
   (global-display-line-numbers-mode 1)
   (setq mac-option-key-is-meta nil
@@ -363,6 +374,10 @@ you should place your code here."
   (setq mac-pass-command-to-system nil)
   (setq neo-theme 'icons)
   (setq neo-vc-integration '(char))
+  (add-hook 'mmm-mode-hook
+    (lambda ()
+      (set-face-background 'mmm-default-submode-face nil)))
+  (require 'vue-mode)
   ;; (define-key evil-normal-state-map "d" nil)
   ;; (define-key evil-normal-state-map "r" nil)
   ;; (define-key evil-motion-state-map "n" 'evil-backward-char)
@@ -401,7 +416,7 @@ you should place your code here."
  '(magit-diff-use-overlays nil)
  '(package-selected-packages
    (quote
-    (go-guru go-eldoc company-go go-mode vue-mode rainbow-mode twig-mode lua-mode dashboard evil-commentary xterm-color unfill smeargle shell-pop ox-gfm orgit mwim multi-term magit-gitflow helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy evil-magit magit-popup transient git-commit with-editor lv eshell-z eshell-prompt-extras esh-help company-web web-completion-data company-tern tern company-statistics company-anaconda company auto-yasnippet ac-ispell auto-complete yaml-mode magit phpunit phpcbf php-extras php-auto-yasnippets drupal-mode php-mode nginx-mode gruvbox-theme-theme zenburn-theme autothemer darktooth-theme gruvbox-theme monokai-theme all-the-icons doom-themes org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot mmm-mode markdown-toc markdown-mode gh-md web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc coffee-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode anaconda-mode pythonic ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+    (eslint-fix company-lsp lsp-mode ht edit-indirect ssass-mode prettier-js lsp-vue vue-html-mode go-guru go-eldoc company-go go-mode vue-mode rainbow-mode twig-mode lua-mode dashboard evil-commentary xterm-color unfill smeargle shell-pop ox-gfm orgit mwim multi-term magit-gitflow helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy evil-magit magit-popup transient git-commit with-editor lv eshell-z eshell-prompt-extras esh-help company-web web-completion-data company-tern tern company-statistics company-anaconda company auto-yasnippet ac-ispell auto-complete yaml-mode magit phpunit phpcbf php-extras php-auto-yasnippets drupal-mode php-mode nginx-mode gruvbox-theme-theme zenburn-theme autothemer darktooth-theme gruvbox-theme monokai-theme all-the-icons doom-themes org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot mmm-mode markdown-toc markdown-mode gh-md web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc coffee-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode anaconda-mode pythonic ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
  '(pdf-view-midnight-colors (quote ("#FDF4C1" . "#282828")))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
@@ -435,4 +450,4 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((((class color) (min-colors 257)) (:foreground "#F8F8F2" :background "#272822")) (((class color) (min-colors 89)) (:foreground "#F5F5F5" :background "#1B1E1C")))))
