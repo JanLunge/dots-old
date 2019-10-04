@@ -353,6 +353,87 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+
+
+
+
+(require 'desktop)
+
+(defvar my-desktop-session-dir
+  (concat (getenv "HOME") "/.emacs.d/desktop-sessions/")
+  "*Directory to save desktop sessions in")
+
+(defvar my-desktop-session-name-hist nil
+  "Desktop session name history")
+
+(defun my-desktop-save (&optional name)
+  "Save desktop by name."
+  (interactive)
+  (unless name
+    (setq name (my-desktop-get-session-name "Save session" t)))
+  (when name
+    (make-directory (concat my-desktop-session-dir name) t)
+    (desktop-save (concat my-desktop-session-dir name) t)))
+
+(defun my-desktop-save-and-clear ()
+  "Save and clear desktop."
+  (interactive)
+  (call-interactively 'my-desktop-save)
+  (desktop-clear)
+  (setq desktop-dirname nil))
+
+(defun my-desktop-read (&optional name)
+  "Read desktop by name."
+  (interactive)
+  (unless name
+    (setq name (my-desktop-get-session-name "Load session")))
+  (when name
+    (desktop-clear)
+    (desktop-read (concat my-desktop-session-dir name))))
+
+(defun my-desktop-change (&optional name)
+  "Change desktops by name."
+  (interactive)
+  (let ((name (my-desktop-get-current-name)))
+    (when name
+      (my-desktop-save name))
+    (call-interactively 'my-desktop-read)))
+
+(defun my-desktop-name ()
+  "Return the current desktop name."
+  (interactive)
+  (let ((name (my-desktop-get-current-name)))
+    (if name
+        (message (concat "Desktop name: " name))
+      (message "No named desktop loaded"))))
+
+(defun my-desktop-get-current-name ()
+  "Get the current desktop name."
+  (when desktop-dirname
+    (let ((dirname (substring desktop-dirname 0 -1)))
+      (when (string= (file-name-directory dirname) my-desktop-session-dir)
+        (file-name-nondirectory dirname)))))
+
+(defun my-desktop-get-session-name (prompt &optional use-default)
+  "Get a session name."
+  (let* ((default (and use-default (my-desktop-get-current-name)))
+         (full-prompt (concat prompt (if default
+                                         (concat " (default " default "): ")
+                                       ": "))))
+    (completing-read full-prompt (and (file-exists-p my-desktop-session-dir)
+                                      (directory-files my-desktop-session-dir))
+                     nil nil nil my-desktop-session-name-hist default)))
+
+(defun my-desktop-kill-emacs-hook ()
+  "Save desktop before killing emacs."
+  (when (file-exists-p (concat my-desktop-session-dir "last-session"))
+    (setq desktop-file-modtime
+          (nth 5 (file-attributes (desktop-full-file-name (concat my-desktop-session-dir "last-session"))))))
+  (my-desktop-save "last-session"))
+
+(add-hook 'kill-emacs-hook 'my-desktop-kill-emacs-hook)
+
+
   ;; (define-key evil-normal-state-map (kbd "t") 'evil-forward-char)
   ;; (define-key evil-normal-state-map (kbd "s") 'evil-backward-char)
   ;; (define-key evil-normal-state-map (kbd "r") 'evil-previous-line)
@@ -384,7 +465,9 @@ you should place your code here."
   ;; (define-key evil-motion-state-map "d" 'evil-forward-char)
   ;; (define-key evil-motion-state-map "r" 'evil-next-line)
   ;; (define-key evil-motion-state-map "t" 'evil-previous-line)
-
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "|" "DONE(d)")
+          (sequence "TASK(r)" "PROGRESS(b)" "TESTING(k)" "|" "FIXED(f)")))
   (setq abbrev-file-name             ;; tell emacs where to read abbrev
         "~/.abbrev_defs")    ;; definitions from...
 
@@ -416,7 +499,7 @@ you should place your code here."
  '(magit-diff-use-overlays nil)
  '(package-selected-packages
    (quote
-    (eslint-fix company-lsp lsp-mode ht edit-indirect ssass-mode prettier-js lsp-vue vue-html-mode go-guru go-eldoc company-go go-mode vue-mode rainbow-mode twig-mode lua-mode dashboard evil-commentary xterm-color unfill smeargle shell-pop ox-gfm orgit mwim multi-term magit-gitflow helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy evil-magit magit-popup transient git-commit with-editor lv eshell-z eshell-prompt-extras esh-help company-web web-completion-data company-tern tern company-statistics company-anaconda company auto-yasnippet ac-ispell auto-complete yaml-mode magit phpunit phpcbf php-extras php-auto-yasnippets drupal-mode php-mode nginx-mode gruvbox-theme-theme zenburn-theme autothemer darktooth-theme gruvbox-theme monokai-theme all-the-icons doom-themes org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot mmm-mode markdown-toc markdown-mode gh-md web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc coffee-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode anaconda-mode pythonic ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+    (flymake-eslint eslint-fix company-lsp lsp-mode ht edit-indirect ssass-mode prettier-js lsp-vue vue-html-mode go-guru go-eldoc company-go go-mode vue-mode rainbow-mode twig-mode lua-mode dashboard evil-commentary xterm-color unfill smeargle shell-pop ox-gfm orgit mwim multi-term magit-gitflow helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy evil-magit magit-popup transient git-commit with-editor lv eshell-z eshell-prompt-extras esh-help company-web web-completion-data company-tern tern company-statistics company-anaconda company auto-yasnippet ac-ispell auto-complete yaml-mode magit phpunit phpcbf php-extras php-auto-yasnippets drupal-mode php-mode nginx-mode gruvbox-theme-theme zenburn-theme autothemer darktooth-theme gruvbox-theme monokai-theme all-the-icons doom-themes org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot mmm-mode markdown-toc markdown-mode gh-md web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc coffee-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode anaconda-mode pythonic ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
  '(pdf-view-midnight-colors (quote ("#FDF4C1" . "#282828")))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
