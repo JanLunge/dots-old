@@ -455,6 +455,14 @@ you should place your code here."
   (setq mac-pass-command-to-system nil)
   (setq neo-theme 'icons)
   (setq neo-vc-integration '(char))
+  ;; https://github.com/emacs-helm/helm/issues/2175
+  (define-key helm-map (kbd "<left>") 'helm-previous-source)
+  (define-key helm-map (kbd "<right>") 'helm-next-source)
+  (customize-set-variable 'helm-ff-lynx-style-map t)
+  (customize-set-variable 'helm-imenu-lynx-style-map t)
+  (customize-set-variable 'helm-semantic-lynx-style-map t)
+  (customize-set-variable 'helm-occur-use-ioccur-style-keys t)
+
   (add-hook 'mmm-mode-hook
     (lambda ()
       (set-face-background 'mmm-default-submode-face nil)))
