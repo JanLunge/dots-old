@@ -48,3 +48,11 @@ ssh-keygen -C "jan.lunge@lunge.de" -q -N "" -f $HOME/.ssh/id_rsa
 mkdir Playground
 mkdir Code
 
+# settings
+
+# Disable press-and-hold for keys in favor of key repeat
+defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+
+# Set a blazingly fast keyboard repeat rate
+defaults write NSGlobalDomain KeyRepeat -int 5
+defaults write NSGlobalDomain InitialKeyRepeat -int 8

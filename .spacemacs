@@ -356,7 +356,7 @@ you should place your code here."
 
 
 
-
+;; Desktops
 (require 'desktop)
 
 (defvar my-desktop-session-dir
@@ -442,7 +442,8 @@ you should place your code here."
   ;;             '("ssh" ".fork.*'" "fork"))
   (customize-set-variable 'tramp-default-user "fork")
   (require 'prettier-js)
-  (add-hook 'vue-mode-hook #'prettier-js-mode)
+  ;;(add-hook 'vue-mode-hook #'prettier-js-mode)
+  (add-hook 'web-mode-hook #'prettier-js-mode)
   (define-key global-map (kbd "<tab>") 'hippie-expand)
   (global-display-line-numbers-mode 1)
   (setq mac-option-key-is-meta nil
@@ -456,8 +457,8 @@ you should place your code here."
   (setq neo-theme 'icons)
   (setq neo-vc-integration '(char))
   ;; https://github.com/emacs-helm/helm/issues/2175
-  (define-key helm-map (kbd "<left>") 'helm-previous-source)
-  (define-key helm-map (kbd "<right>") 'helm-next-source)
+  ;;(define-key helm-map (kbd "<left>") 'helm-previous-source)
+  ;;(define-key helm-map (kbd "<right>") 'helm-next-source)
   (customize-set-variable 'helm-ff-lynx-style-map t)
   (customize-set-variable 'helm-imenu-lynx-style-map t)
   (customize-set-variable 'helm-semantic-lynx-style-map t)
@@ -466,7 +467,7 @@ you should place your code here."
   (add-hook 'mmm-mode-hook
     (lambda ()
       (set-face-background 'mmm-default-submode-face nil)))
-  (require 'vue-mode)
+  ;; (require 'vue-mode)
   ;; (define-key evil-normal-state-map "d" nil)
   ;; (define-key evil-normal-state-map "r" nil)
   ;; (define-key evil-motion-state-map "n" 'evil-backward-char)
