@@ -330,6 +330,10 @@ hyper:bind({}, 'w', function()
     move_vthird(2)
     hyper.triggered = true
 end)
+hyper:bind({}, '.', function()
+    hs.window.switcher.nextWindow()
+    hyper.triggered = true
+end)
 
 ---- hypermod
 -- app switcher
@@ -362,6 +366,18 @@ end)
 hs.hotkey.bind(hyperMod, 'b', function()
     hs.osascript.applescriptFromFile("/Users/jan/playground/automate/youtube-play.applescript")
 end)
+
+switcherW = hs.window.switcher.new({})
+switcher_space = hs.window.switcher.new(hs.window.filter.new():setCurrentSpace(true):setDefaultFilter{})
+--management
+hs.hotkey.bind(hyperMod, 'f', function()
+  switcherW.nextWindow()
+end)
+hs.hotkey.bind(hyperMod, 'q', function()
+  switcher_space.nextWindow()
+end)
+
+
 -- test for moving mouse to window
 hs.hotkey.bind(hyperMod, "o", function()
   local win = hs.window.focusedWindow()
