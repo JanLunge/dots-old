@@ -98,7 +98,7 @@ bindkey '^e' edit-command-line
 
 # Load aliases and shortcuts if existent.
 [ -f "$HOME/.config/shortcutrc" ] && source "$HOME/.config/shortcutrc"
-[ -f "$HOME/.dotfiles/aliasrc" ] && source "$HOME/.dotfiles/aliasrc"
+[ -f "$HOME/.dots/aliassrc" ] && source "$HOME/.dots/aliassrc"
 
 source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /usr/local/share/zsh-history-substring-search/zsh-history-substring-search.zsh
