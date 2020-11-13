@@ -18,7 +18,7 @@ dockutil --remove App\ Store --no-restart
 dockutil --remove News
 
 # brew package installs
-brew install zsh zsh-syntax-highlighting zsh-autosuggestions zsh-history-substring-search lf exa dockutils tmux tree git go
+brew install zsh zsh-syntax-highlighting zsh-autosuggestions zsh-history-substring-search lf exa dockutil tmux tree git go
 
 # brew casks
 
@@ -34,7 +34,7 @@ dockutil --add /Applications/Telegram.app
 
 #term
 brew cask install iterm2
-brew tap caskroom/fonts && brew cask install font-source-code-pro
+brew tap homebrew/cask-fonts && brew cask install homebrew/cask-fonts/font-source-code-pro
 ln -s dots/.zshrc .zshrc
 chsh -s $(which zsh)
 dockutil --add /Applications/iTerm.app
@@ -51,8 +51,18 @@ mkdir Code
 # settings
 
 # Disable press-and-hold for keys in favor of key repeat
-defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+#defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 
-# Set a blazingly fast keyboard repeat rate
-defaults write NSGlobalDomain KeyRepeat -int 5
-defaults write NSGlobalDomain InitialKeyRepeat -int 8
+# NO Set a blazingly fast keyboard repeat rate
+#defaults write NSGlobalDomain KeyRepeat -int 5
+#defaults write NSGlobalDomain InitialKeyRepeat -int 8
+
+defaults write com.apple.dock minimize-to-application -bool true
+defaults write com.apple.dock expose-animation-duration -float 0.1
+
+#Remove the auto-hiding Dock delay
+defaults write com.apple.dock autohide-delay -float 0
+# Remove the animation when hiding/showing the Dock
+defaults write com.apple.dock autohide-time-modifier -float 0
+defaults write com.apple.dock showhidden -bool true
+defaults write com.apple.dock show-recents -bool false

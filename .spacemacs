@@ -91,7 +91,7 @@ values."
                                         sass-mode
                                         css-mode
                                         rainbow-mode
-                                        vue-mode
+                                        ;;vue-mode
                                         prettier-js
                                         emmet-mode)
     ;; A list of packages that cannot be updated.
@@ -440,7 +440,7 @@ you should place your code here."
   ;; (define-key evil-normal-state-map (kbd "n") 'evil-next-line)
   ;;(add-to-list 'tramp-default-user-alist
   ;;             '("ssh" ".fork.*'" "fork"))
-  (customize-set-variable 'tramp-default-user "fork")
+  ;; (customize-set-variable 'tramp-default-user "fork")
   (require 'prettier-js)
   ;;(add-hook 'vue-mode-hook #'prettier-js-mode)
   (add-hook 'web-mode-hook #'prettier-js-mode)
@@ -474,9 +474,12 @@ you should place your code here."
   ;; (define-key evil-motion-state-map "d" 'evil-forward-char)
   ;; (define-key evil-motion-state-map "r" 'evil-next-line)
   ;; (define-key evil-motion-state-map "t" 'evil-previous-line)
-  (setq org-todo-keywords
-        '((sequence "TODO(t)" "|" "DONE(d)")
-          (sequence "TASK(r)" "PROGRESS(b)" "TESTING(k)" "|" "FIXED(f)")))
+  ;; (setq org-todo-keywords
+  ;;   '((sequence "TODO(t)" "|" "DONE(d)")
+  ;;        (sequence "TASK(r)" "PROGRESS(b)" "TESTING(k)" "|" "FIXED(f)")))
+  (with-eval-after-load 'org
+    (setq org-todo-keywords
+          '((sequence "todo" "doing" "bug" "blocked" "review" "|" "done" "archived"))))
   (setq abbrev-file-name             ;; tell emacs where to read abbrev
         "~/.abbrev_defs")    ;; definitions from...
 

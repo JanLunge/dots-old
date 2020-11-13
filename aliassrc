@@ -39,10 +39,16 @@ alias fuck='sudo $(fc -ln -1)'
 alias please='sudo'
 
 #docker
-function undockall {
-    docker stop $(docker ps -a -q)
+alias undockall="docker stop $(docker ps -a -q)"
+alias killdockall="docker kill $(docker ps -q)"
+alias dockerprune="docker system prune --all --volumes"
+alias d="docker"
+alias k="kubectl"
+alias dc="docker-compose"
+alias dce="docker-compose exec"
+function dcb(){
+    docker-compose exec $1 bash
 }
-
 # Go development
 #test -d "${GOPATH}" || mkdir "${GOPATH}"
 #test -d "${GOPATH}/src/github.com" || mkdir -p "${GOPATH}/src/github.com"
@@ -128,3 +134,7 @@ alias path='echo -e ${PATH//:/\\n}'
 
 # start ssh
 alias startssh="sudo service ssh start"
+
+
+# OMR
+alias startTraeffic="docker run -d -p 80:80 -p 8080:8080 --network omr -v /var/run/docker.sock:/var/run/docker.sock traefik:1.7 --api --docker"
